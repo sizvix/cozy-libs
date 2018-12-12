@@ -14,16 +14,12 @@
     "url": "https://github.com/cozy/cozy-libs/issues"
   },
   "scripts": {
-<<<<<<< HEAD
     "test": "jest --verbose --coverage",
-=======
->>>>>>> init cozy-harvest
     "build": "babel src -d dist",
     "prepublishOnly": "yarn build",
     "watch": "yarn build --watch"
   },
   "devDependencies": {
-<<<<<<< HEAD
     "@babel/cli": "7.2.0",
     "babel-jest": "23.6.0",
     "babel-preset-cozy-app": "^1.2.2",
@@ -32,9 +28,5 @@
     "jest": "23.6.0",
     "react": "16.6.1",
     "react-dom": "^16.6.3"
-=======
-    "@babel/cli": "7.1.2",
-    "babel-preset-cozy-app": "^1.2.1"
->>>>>>> init cozy-harvest
   }
 }
