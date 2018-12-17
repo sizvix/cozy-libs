@@ -4,38 +4,42 @@ import { legacyLoginFields, legacyEncryptedFields, Manifest } from './Manifest'
 describe('Manifest', () => {
   describe('sanitize', () => {
     it("shouldn't modify if fields is null", () => {
-      const input0 = {
-        fields: null
-      }
-      const result = Manifest.sanitize(input0)
+      const manifest = {}
+      const result = Manifest.sanitize(manifest)
       expect(result.fields).toBe(null)
     })
   })
 
   describe('sanitizeIdentifier', () => {
     it('should set role=identifier for login', () => {
-      const input1 = {
+      const manifest = {
         fields: {
           login: { type: 'text' },
           password: { type: 'password' }
         }
       }
-      const result = Manifest.sanitizeIdentifier(input1)
+      const result = Manifest.sanitize(manifest)
       expect(result.fields.login.role).toBe('identifier')
     })
 
-    it('should set role=identifier without login field', () => {
-      const input1 = {
+    it('should set first non-password field as role=identifier', () => {
+      const manifest = {
         fields: {
           password: { type: 'password' },
           plop: { type: 'text' }
         }
       }
-      const result = Manifest.sanitizeIdentifier(input1)
+      const result = Manifest.sanitize(manifest)
       expect(result.fields.plop.role).toBe('identifier')
     })
 
-    for (let name of legacyLoginFields) {
+    const legacyLoginFieldsTest = [
+      'login',
+      'identifier',
+      'new_identifier',
+      'email'
+    ]
+    for (let name of legacyLoginFieldsTest) {
       let inputLegacy = {
         fields: {
           password: { type: 'password' },
@@ -44,38 +48,68 @@ describe('Manifest', () => {
       }
       inputLegacy.fields[name] = { type: 'text' }
       it('should set role=identifier to ' + name, () => {
-        const result = Manifest.sanitizeIdentifier(inputLegacy)
+        const result = Manifest.sanitize(inputLegacy)
         expect(result.fields[name].role).toBe('identifier')
       })
     }
+
+    it('should set only one identifier', () => {
+      const manifest = {
+        fields: {
+          identifier: { type: "text" },
+          mail: { type: 'email' },
+          login: { type: "text" },
+          new_identifier: { type: "text" }
+        }
+      }
+      const result = Manifest.sanitize(manifest)
+      const identifiers = Object.keys(result.fields).filter(name => result.fields[name].role === 'identifier')
+      expect(identifiers.length).toBe(1)
+    })
+
+    it('should keep the identifier pioripy', () => {
+      const manifest = {
+        fields: {
+          identifier: { type: "text" },
+          mail: { type: 'email' },
+          login: { type: "text" },
+          new_identifier: { type: "text" }
+        }
+      }
+      const result = Manifest.sanitize(manifest)
+      expect(result.fields.login.required).toBe(true)
+    })
   })
 
   describe('sanitizeIsRequired', () => {
-    it('should set isRequired=true for role=identifier', () => {
-      const input1 = {
+    it('should set required=true as default value', () => {
+      const manifest = {
         fields: {
-          login: { type: 'text', role: 'identifier' },
-          password: { type: 'password' }
+          login: { type: 'text' },
+          password: { type: 'password' },
+          gender: { type: 'text', required: false },
+          country: { type: 'text' }
         }
       }
-      const result = Manifest.sanitizeIsRequired(input1)
-      expect(result.fields.login.isRequired).toBe(true)
-    })
-
-    it('should set isRequired=true for role=password', () => {
-      const input1 = {
-        fields: {
-          login: { type: 'text', role: 'identifier' },
-          password: { type: 'password', role: 'password' }
-        }
-      }
-      const result = Manifest.sanitizeIsRequired(input1)
-      expect(result.fields.password.isRequired).toBe(true)
+      const result = Manifest.sanitize(manifest)
+      expect(result.fields.login.required).toBe(true)
+      expect(result.fields.password.required).toBe(true)
+      expect(result.fields.gender.required).toBe(false)
+      expect(result.fields.country.required).toBe(true)
     })
   })
 
   describe('sanitizeEncrypted', () => {
-    for (let name of legacyEncryptedFields) {
+    const legacyEncryptedFieldsTest = [
+      'secret',
+      'dob',
+      'code',
+      'answer',
+      'access_token',
+      'refresh_token',
+      'appSecret'
+    ]
+    for (let name of legacyEncryptedFieldsTest) {
       let inputLegacy = {
         fields: {
           password: { type: 'password' },
@@ -84,7 +118,7 @@ describe('Manifest', () => {
       }
       inputLegacy.fields[name] = { type: 'text' }
       it('should set encrypted=true to ' + name, () => {
-        const result = Manifest.sanitizeEncrypted(inputLegacy)
+        const result = Manifest.sanitize(inputLegacy)
         expect(result.fields[name].encrypted).toBe(true)
       })
     }
