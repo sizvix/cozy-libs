@@ -37,14 +37,15 @@ export const Manifest = {
       }
 
     for (let fieldName in manifest.fields)
-      if (fieldName !== 'password') manifest.fields[fieldName].role = 'identifier'
+      if (fieldName !== 'password')
+        manifest.fields[fieldName].role = 'identifier'
 
     return manifest
   },
 
   sanitizeIsRequired: manifest => {
     for (let fieldName in manifest.fields)
-      if (!manifest.fields[fieldName].required || typeof manifest.fields[fieldName].required != "boolean")
+      if (typeof manifest.fields[fieldName].required != 'boolean')
         manifest.fields[fieldName].required = true
 
     return manifest

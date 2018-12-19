@@ -1,12 +1,20 @@
 /* eslint-env jest */
-import { legacyLoginFields, legacyEncryptedFields, Manifest } from './Manifest'
+import { Manifest } from './Manifest'
 
 describe('Manifest', () => {
   describe('sanitize', () => {
-    it("shouldn't modify if fields is null", () => {
-      const manifest = {}
+    it('should remove "fields" if fields is null', () => {
+      const manifest = {
+        fields: null
+      }
       const result = Manifest.sanitize(manifest)
       expect(result.fields).toBe(null)
+    })
+
+    it("shouldn't modify if fields is undefined", () => {
+      const manifest = {}
+      const result = Manifest.sanitize(manifest)
+      expect(result.fields).toBe(undefined)
     })
   })
 
@@ -56,24 +64,26 @@ describe('Manifest', () => {
     it('should set only one identifier', () => {
       const manifest = {
         fields: {
-          identifier: { type: "text" },
+          identifier: { type: 'text' },
           mail: { type: 'email' },
-          login: { type: "text" },
-          new_identifier: { type: "text" }
+          login: { type: 'text' },
+          new_identifier: { type: 'text' }
         }
       }
       const result = Manifest.sanitize(manifest)
-      const identifiers = Object.keys(result.fields).filter(name => result.fields[name].role === 'identifier')
+      const identifiers = Object.keys(result.fields).filter(
+        name => result.fields[name].role === 'identifier'
+      )
       expect(identifiers.length).toBe(1)
     })
 
     it('should keep the identifier pioripy', () => {
       const manifest = {
         fields: {
-          identifier: { type: "text" },
+          identifier: { type: 'text' },
           mail: { type: 'email' },
-          login: { type: "text" },
-          new_identifier: { type: "text" }
+          login: { type: 'text' },
+          new_identifier: { type: 'text' }
         }
       }
       const result = Manifest.sanitize(manifest)
