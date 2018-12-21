@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react'
 import { Form , Field } from 'react-final-form'
+import GenForm from './GenForm'
 
 export class Harvest extends PureComponent {
   render() {
-    return (
+      return <GenForm manifestFields={{'login':{type:'text'},'plop':{type:'password'} }} />
+/*    return (
       <Form onSubmit={v=>console.log(v)} render={({ handleSubmit, form, submitting, pristine, values })=>(
         <div>
           <Field name="firstName" component="input" placeholder="First Name" />
@@ -30,7 +32,7 @@ export class Harvest extends PureComponent {
           <pre>{JSON.stringify(values, 0, 2)}</pre>
         </div>
       )} />
-    )
+    )	*/
   }
 }
 
