@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react'
 import { Form , Field } from 'react-final-form'
-import GenForm from './GenForm'
+
+//export { default as AccountForm } from './react/AccountForm'
+import AccountForm from './react/AccountForm'
 
 export class Harvest extends PureComponent {
   render() {
-      return <GenForm manifestFields={{'login':{type:'text'},'plop':{type:'password'} }} />
+      return <AccountForm manifestFields={{'login':{type:'text'},'plop':{type:'password'} }} />
 /*    return (
       <Form onSubmit={v=>console.log(v)} render={({ handleSubmit, form, submitting, pristine, values })=>(
         <div>
@@ -36,5 +38,7 @@ export class Harvest extends PureComponent {
   }
 }
 
-export default Harvest
-
+export default {
+  Harvest,
+  AccountForm
+}

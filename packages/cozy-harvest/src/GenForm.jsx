@@ -18,13 +18,11 @@ export class GenForm extends PureComponent {
         <div>
           { Object.keys(props.manifestFields).map(fieldName => {
             const fieldToGen = props.manifestFields[fieldName] ;
-            if(['text','password','date'].includes( fieldToGen.type )){
-              <FinalFormFied name={fieldName} >
-                {({ input, meta })=>(
-                  <Field label={fieldName} placeholder="First Name" type={fieldToGen.type}  {...input} />
-                )}
-              </FinalFormFied>
-            }
+            return <FinalFormFied name={fieldName} >
+              {({ input, meta })=>(
+                <Field label={fieldName} placeholder="First Name" type={fieldToGen.type}  {...input} />
+              )}
+            </FinalFormFied>
           })}
           <button onclick={()=>alert(JSON.stringify(values, 0, 2))} >ALERT </button>
           <pre>{JSON.stringify(values, 0, 2)}</pre>
